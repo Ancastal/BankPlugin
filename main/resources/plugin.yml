@@ -1,0 +1,22 @@
+#
+# Private Banking Plugin by Ancastal
+# 
+name: ${project.name}
+version: ${project.version}
+main: ${main.class}
+author: ${author}
+
+# DO NOT EDIT. This api-version is used for maximum backward compatibility.
+api-version: 1.13
+
+# Load the following libraries
+libraries:
+  # DO NOT EDIT THE FIRST LIBRARY, required to make your plugin work under Java 15+
+  - org.openjdk.nashorn:nashorn-core:15.4
+  #- org.jsoup:jsoup:1.14.3
+  #- com.zaxxer:HikariCP:5.0.1
+
+# Plugins that we support so that we are loaded after them for your convenience.
+softdepend: [ AuthMe, BanManager, BungeeChatAPI, CMI, DiscordSRV, Factions, Feudal, ItemsAdder, Essentials, LegacyFactions, Lands, LuckPerms, Multiverse-Core, MVdWPlaceholderAPI, MythicMobs, mcMMO, Nicky, PlaceholderAPI, ProtocolLib, SimpleClans, Towny, TownyChat, Vault, WorldEdit ]
+
+commands:  

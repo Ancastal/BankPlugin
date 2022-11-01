@@ -61,11 +61,6 @@ public class BankCertificate {
 			return false;
 		}
 		return true;
-		/*
-		checkBoolean(item.getType() != Material.AIR, "You need to hold your Bank Certificate.");
-		checkBoolean(CompMetadata.getMetadata(item, "playerName") != null, "Your Bank Certificate is not valid.");
-		checkBoolean(CompMetadata.getMetadata(item, "playerName").equals(player.getName()), "This bank certificate belongs to " + CompMetadata.getMetadata(item, "playerName"));
-		 */
 	}
 
 
@@ -77,6 +72,10 @@ public class BankCertificate {
 		Economy economy = BankPlugin.getEconomy();
 		if (economy.getBalance(bankName) < amount) {
 			Common.tellNoPrefix(receivingPlayer, warnPrefix + "The bank does not have enough money.");
+			return;
+		}
+		if (amount == 0) {
+			Common.tellNoPrefix(receivingPlayer, warnPrefix + "You cannot withdraw 0.0 Krunas.");
 			return;
 		}
 		economy.withdrawPlayer(bankName, amount);
@@ -93,6 +92,10 @@ public class BankCertificate {
 			Common.tellNoPrefix(sendingPlayer, warnPrefix + "You do not have enough money.");
 			return;
 		}
+		if (amount == 0) {
+			Common.tellNoPrefix(sendingPlayer, warnPrefix + "You cannot deposit 0.0 Krunas.");
+			return;
+		}
 		economy.withdrawPlayer(sendingPlayer, amount);
 		economy.depositPlayer(bankName, amount);
 
@@ -103,6 +106,10 @@ public class BankCertificate {
 		Economy economy = BankPlugin.getEconomy();
 		if (economy.getBalance(bankName) < amount) {
 			Common.tellNoPrefix(receivingPlayer, warnPrefix + "The bank does not have enough money.");
+			return;
+		}
+		if (amount == 0) {
+			Common.tellNoPrefix(sendingPlayer, warnPrefix + "You cannot transfer 0.0 Krunas.");
 			return;
 		}
 		economy.withdrawPlayer(bankName, amount);

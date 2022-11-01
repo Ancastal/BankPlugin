@@ -61,7 +61,6 @@ public final class BankPlugin extends SimplePlugin {
 		if (!setupEconomy()) {
 			Common.logFramed("Disabled due to no Vault dependency found!");
 			Bukkit.getPluginManager().disablePlugin(this);
-			return;
 		}
 
 	}

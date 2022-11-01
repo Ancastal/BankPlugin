@@ -10,7 +10,7 @@ import org.mineacademy.fo.Common;
 
 public class BankPrompt extends NumericPrompt {
 
-	private Player targetPlayerName;
+	private final Player targetPlayerName;
 
 	BankPrompt(Player targetPlayerName) {
 		this.targetPlayerName = targetPlayerName;

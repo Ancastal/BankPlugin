@@ -1,6 +1,7 @@
 package org.ancastal.bankplugin;
 
 import net.milkbowl.vault.economy.Economy;
+import org.ancastal.bankplugin.helper.NMSCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -58,6 +59,8 @@ public final class BankPlugin extends SimplePlugin {
 		// Please see @AutoRegister for parts you do not have to register manually
 		//
 
+		registerAllCommands(NMSCommand.class);
+		
 		if (!setupEconomy()) {
 			Common.logFramed("Disabled due to no Vault dependency found!");
 			Bukkit.getPluginManager().disablePlugin(this);

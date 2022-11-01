@@ -25,14 +25,21 @@ public class BankCertificate {
 			+ "\n&f&lCERTIFICATE";
 
 
-	private void createBank(String bankName) {
+	private boolean createBank(String bankName) {
 		Economy economy = BankPlugin.getEconomy();
+		if (economy.hasAccount(bankName)) {
+			return false;
+		}
 		economy.createPlayerAccount(bankName);
+		return true;
 	}
 
 
-	public ItemStack getItem(OfflinePlayer player, String bankName) {
-		createBank(bankName);
+	public ItemStack getItem(OfflinePlayer player, String bankName, Player sender) {
+		if (!createBank(bankName)) {
+			Common.tellNoPrefix(sender, warnPrefix + "This bank account already exists.");
+			return null;
+		}
 		ItemStack certificate = new ItemStack(
 				ItemCreator.of(
 								CompMaterial.PAPER,

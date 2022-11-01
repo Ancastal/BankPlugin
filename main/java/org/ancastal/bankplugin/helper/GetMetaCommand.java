@@ -15,6 +15,6 @@ public final class GetMetaCommand extends SimpleCommand {
 	@Override
 	protected void onCommand() {
 		ItemStack item = getPlayer().getItemInHand();
-		getPlayer().sendMessage("The key of the metadata in this item is: " + CompMetadata.getMetadata(item, "key"));
+		getPlayer().sendMessage("The key of the metadata in this item is: " + CompMetadata.getMetadata(item, "playerName"));
 	}
 }

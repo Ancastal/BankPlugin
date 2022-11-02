@@ -1,43 +1,33 @@
 package org.ancastal.bankplugin.command.BankCommands;
 
 import org.ancastal.bankplugin.model.BankCertificate;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
-import java.util.Collections;
-import java.util.List;
-
-public final class BankWithdrawCommand extends SimpleSubCommand {
-	public BankWithdrawCommand(SimpleCommandGroup parent) {
-		super(parent, "withdraw");
-		setMinArguments(1);
-		setUsage("<amount>");
-		setDescription("Withdraws money from bank.");
+public class BankTransferCommand extends SimpleSubCommand {
+	public BankTransferCommand(SimpleCommandGroup parent) {
+		super(parent, "transfer");
+		setMinArguments(2);
+		setDescription("Transfer money from bank to another player");
+		setUsage("<player> <amount>");
 	}
-
 
 	@Override
 	protected void onCommand() {
 		checkConsole();
 
 		ItemStack item = getPlayer().getItemInHand();
+		Player receivingPlayer = Bukkit.getPlayer(args[0]);
 
 		if (!BankCertificate.checkCertificate(getPlayer(), item)) return;
 
 		String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
-		BankCertificate.withdrawFromBank(bankName, getPlayer(), Double.parseDouble(args[0]));
-
+		BankCertificate.transferToPlayer(bankName, getPlayer(), receivingPlayer, Double.parseDouble(args[1]));
 	}
-
-
-	@Override
-	protected List<String> tabComplete() {
-		if (args.length == 1) {
-			return Collections.singletonList("<amount>");
-		}
-		return NO_COMPLETE;
-	}
+	
 
 }

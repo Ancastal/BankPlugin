@@ -21,7 +21,7 @@ public class BankPrompt extends NumericPrompt {
 		Player player = (Player) context.getForWhom();
 		ItemStack item = player.getItemInHand();
 
-		String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
+		String bankName = Common.stripColors(item.getItemMeta().getDisplayName()) + BankCertificate.CUSTOM_BANK_STRING;
 		BankCertificate.transferToPlayer(bankName, player, targetPlayerName, input.doubleValue());
 		return null;
 	}

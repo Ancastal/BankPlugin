@@ -9,14 +9,13 @@ import org.mineacademy.fo.command.SimpleSubCommand;
 import java.util.Collections;
 import java.util.List;
 
-public final class BankWithdrawCommand extends SimpleSubCommand {
-	public BankWithdrawCommand(SimpleCommandGroup parent) {
-		super(parent, "withdraw");
+public class BankDepositCommand extends SimpleSubCommand {
+	public BankDepositCommand(SimpleCommandGroup parent) {
+		super(parent, "deposit");
 		setMinArguments(1);
+		setDescription("Deposit money into the bank.");
 		setUsage("<amount>");
-		setDescription("Withdraws money from bank.");
 	}
-
 
 	@Override
 	protected void onCommand() {
@@ -27,10 +26,9 @@ public final class BankWithdrawCommand extends SimpleSubCommand {
 		if (!BankCertificate.checkCertificate(getPlayer(), item)) return;
 
 		String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
-		BankCertificate.withdrawFromBank(bankName, getPlayer(), Double.parseDouble(args[0]));
+		BankCertificate.depositToBank(bankName, getPlayer(), Double.parseDouble(args[0]));
 
 	}
-
 
 	@Override
 	protected List<String> tabComplete() {
@@ -39,5 +37,4 @@ public final class BankWithdrawCommand extends SimpleSubCommand {
 		}
 		return NO_COMPLETE;
 	}
-
 }

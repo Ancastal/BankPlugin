@@ -1,8 +1,9 @@
-package org.ancastal.bankplugin.model;
+package org.ancastal.bankplugin.menus;
 
 
 import net.milkbowl.vault.economy.Economy;
 import org.ancastal.bankplugin.BankPlugin;
+import org.ancastal.bankplugin.model.BankCertificate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -63,7 +64,7 @@ public class BankMenu extends Menu {
 
 					ItemStack item = player.getItemInHand();
 
-					String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
+					String bankName = Common.stripColors(item.getItemMeta().getDisplayName()) + BankCertificate.CUSTOM_BANK_STRING;
 					tellInfo("Balance: " + this.economy.getBalance(bankName) + "kr");
 
 				});

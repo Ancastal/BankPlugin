@@ -16,6 +16,8 @@ import org.mineacademy.fo.remain.nbt.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 
 public final class BankCreateCommand extends SimpleSubCommand {
@@ -30,6 +32,7 @@ public final class BankCreateCommand extends SimpleSubCommand {
 		super(parent, "create");
 		setMinArguments(2);
 		setUsage("<player> <bankName>");
+		setDescription("Creates a bank account and sends the certificate to the player.");
 	}
 
 	@Override
@@ -39,20 +42,25 @@ public final class BankCreateCommand extends SimpleSubCommand {
 		checkConsole();
 		final String playerName = args[0];
 		final String bankName = args[1];
+
 		Economy economy = BankPlugin.getEconomy();
 		OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
 
 		ItemStack certificate = bankCertificate.getItem(offlinePlayer, bankName, getPlayer());
+
+		certificate = CompMetadata.setMetadata(CompMetadata.setMetadata(certificate, "playerName", playerName), "bankName", bankName + BankCertificate.CUSTOM_BANK_STRING);
+
+
 		if (certificate == null) {
 			return;
 		}
 		if (Bukkit.getPlayer(playerName) != null) {
-			PlayerUtil.addItemsOrDrop(Bukkit.getPlayer(playerName), CompMetadata.setMetadata(certificate, "playerName", playerName));
+			PlayerUtil.addItemsOrDrop(Bukkit.getPlayer(playerName), certificate);
 			tellSuccess("Bank certificate sent to " + playerName);
 		} else if (offlineSend(CompMetadata.setMetadata(certificate, "playerName", playerName))) {
 			tellSuccess("Bank certificate shipped offline to " + playerName);
 		} else {
-			PlayerUtil.addItemsOrDrop(getPlayer(), CompMetadata.setMetadata(certificate, "playerName", playerName));
+			PlayerUtil.addItemsOrDrop(getPlayer(), certificate);
 			tellInfo("Item could not be sent online or offline to " + playerName);
 		}
 
@@ -62,8 +70,6 @@ public final class BankCreateCommand extends SimpleSubCommand {
 		final OfflinePlayer param = Bukkit.getOfflinePlayer(args[0]);
 
 		this.nbtFile = new NBTFile(new File(Bukkit.getWorldContainer(), "world/playerdata/" + param.getUniqueId() + ".dat"));
-
-		System.out.println(nbtFile);
 
 		this.nbtInventory = this.nbtFile.getCompoundList("Inventory");
 		this.content = this.readData(Bukkit.getOfflinePlayer(param.getUniqueId()));
@@ -99,5 +105,16 @@ public final class BankCreateCommand extends SimpleSubCommand {
 		}
 
 		return content;
+	}
+
+	@Override
+	protected List<String> tabComplete() {
+
+		if (args.length == 1)
+			return this.completeLastWordPlayerNames();
+		else if (args.length == 2)
+			return Collections.singletonList("<bankName>");
+
+		return NO_COMPLETE;
 	}
 }

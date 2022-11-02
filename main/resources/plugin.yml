@@ -19,4 +19,22 @@ libraries:
 # Plugins that we support so that we are loaded after them for your convenience.
 softdepend: [ AuthMe, BanManager, BungeeChatAPI, CMI, DiscordSRV, Factions, Feudal, ItemsAdder, Essentials, LegacyFactions, Lands, LuckPerms, Multiverse-Core, MVdWPlaceholderAPI, MythicMobs, mcMMO, Nicky, PlaceholderAPI, ProtocolLib, SimpleClans, Towny, TownyChat, Vault, WorldEdit ]
 
-commands:  
+
+commands:
+
+permissions:
+  bankplugin.user.default:
+    children:
+      - bankplugin.command.balance
+      - bankplugin.command.transfer
+      - bankplugin.command.withdraw
+      - bankplugin.command.deposit
+      - bankplugin.command.menu
+    default:
+      true
+  bankplugin.user.minister:
+    children:
+      - bankplugin.command.create
+      - bankplugin.command.info
+    default:
+      false

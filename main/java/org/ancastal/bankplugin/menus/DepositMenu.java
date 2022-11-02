@@ -1,9 +1,12 @@
-package org.ancastal.bankplugin.model;
+package org.ancastal.bankplugin.menus;
 
 
+import net.milkbowl.vault.economy.Economy;
 import org.ancastal.bankplugin.BankPlugin;
+import org.ancastal.bankplugin.model.BankCertificate;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.menu.Menu;
@@ -11,7 +14,6 @@ import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.annotation.Position;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
-import org.mineacademy.fo.remain.CompMetadata;
 
 
 public class DepositMenu extends Menu {
@@ -34,17 +36,18 @@ public class DepositMenu extends Menu {
 	DepositMenu(Player player) {
 		setTitle("Set your deposit...");
 		setSize(Integer.valueOf(9));
-		CompMetadata.setTempMetadata(player, "DepositMenu_" + BankPlugin.getInstance());
+		//CompMetadata.setTempMetadata(player, "DepositMenu_" + BankPlugin.getInstance());
 
 		this.confirmButton = new Button() {
 			@Override
 			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-
 				DepositMenu.this.restartMenu();
-				System.out.println(DepositMenu.quantity);
+
 				ItemStack item = player.getItemInHand();
 				String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
 				BankCertificate.depositToBank(bankName, player, Double.valueOf(DepositMenu.quantity));
+				quantity = 0;
+				player.closeInventory();
 
 			}
 
@@ -60,9 +63,15 @@ public class DepositMenu extends Menu {
 				ItemCreator.of(CompMaterial.PLAYER_HEAD, "&2Increase by 1.000 Krunas", "\nIncrease the amount you\nwould like to deposit")
 						.skullUrl("https://textures.minecraft.net/texture/b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f"),
 				action -> {
+					Economy economy = BankPlugin.getEconomy();
+					if (economy.getBalance(player) < quantity) {
+						animateTitle("&4Not enough money");
+						return;
+					}
 					quantity += 1000;
 					animateTitle("Increased by 1000 Krunas");
 					restartMenu();
+
 
 				});
 
@@ -79,6 +88,10 @@ public class DepositMenu extends Menu {
 
 	}
 
+	@Override
+	protected void onMenuClose(Player player, Inventory inventory) {
+		quantity = 0;
+	}
 
 	@Override
 	public ItemStack getItemAt(int slot) {

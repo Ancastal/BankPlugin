@@ -1,8 +1,7 @@
-package org.ancastal.bankplugin.command.BankCommands;
+package org.ancastal.bankplugin.helper;
 
 
 import lombok.SneakyThrows;
-import org.ancastal.bankplugin.helper.NMSCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -79,8 +78,6 @@ public final class InvEditCommand extends NMSCommand {
 			setTitle("&4" + target.getName() + "'s offline inventory");
 
 			this.nbtFile = new NBTFile(new File(Bukkit.getWorldContainer(), "world/playerdata/" + target.getUniqueId() + ".dat"));
-
-			System.out.println(nbtFile);
 
 			this.nbtInventory = this.nbtFile.getCompoundList("Inventory");
 			this.content = this.readData(target);

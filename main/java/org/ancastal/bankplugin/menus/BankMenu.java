@@ -40,9 +40,7 @@ public class BankMenu extends Menu {
 	public BankMenu(Player player) {
 
 		setTitle("Bank Administration");
-
-		setSize(Integer.valueOf(27));
-
+		setSize(27);
 		setViewer(player);
 
 		this.depositButton = new ButtonMenu(new DepositMenu(player),
@@ -82,7 +80,6 @@ public class BankMenu extends Menu {
 		});
 
 	}
-
 
 	@Override
 	public ItemStack getItemAt(int slot) {

@@ -48,12 +48,13 @@ public final class BankCreateCommand extends SimpleSubCommand {
 
 		ItemStack certificate = bankCertificate.getItem(offlinePlayer, bankName, getPlayer());
 
-		certificate = CompMetadata.setMetadata(CompMetadata.setMetadata(certificate, "playerName", playerName), "bankName", bankName + BankCertificate.CUSTOM_BANK_STRING);
-
-
 		if (certificate == null) {
 			return;
 		}
+
+		certificate = CompMetadata.setMetadata(CompMetadata.setMetadata(certificate, "playerName", playerName), "bankName", bankName + BankCertificate.CUSTOM_BANK_STRING);
+
+
 		if (Bukkit.getPlayer(playerName) != null) {
 			PlayerUtil.addItemsOrDrop(Bukkit.getPlayer(playerName), certificate);
 			tellSuccess("Bank certificate sent to " + playerName);

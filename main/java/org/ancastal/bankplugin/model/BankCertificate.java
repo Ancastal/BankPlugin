@@ -3,6 +3,7 @@ package org.ancastal.bankplugin.model;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.ancastal.bankplugin.BankPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -12,6 +13,8 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.CompMetadata;
 
+import java.util.logging.Level;
+
 @Getter
 public class BankCertificate {
 
@@ -19,20 +22,22 @@ public class BankCertificate {
 	protected final static String WARN_PREFIX = "&8&l[&4&l\u2715&8&l]&c ";
 	protected final static String SUCCESS_PREFIX = "&8&l[&2&l\u2714&8&l]&7 ";
 
-	private static final String lore = "\n"
-			+ "This is a certificate of"
-			+ "\nownership of a bank."
-			+ "\n"
-			+ "\n&f&lCERTIFICATE";
+	@Getter
+	public static final String lore =
+			"\n"
+					+ "This is a certificate of"
+					+ "\nownership of a bank."
+					+ "\n"
+					+ "\n&f&lCERTIFICATE";
 
 
 	private boolean createBank(String bankName) {
 		Economy economy = BankPlugin.getEconomy();
-		if (economy.hasAccount(bankName + "_" + BankPlugin.getInstance())) {
+		if (economy.hasAccount(bankName + CUSTOM_BANK_STRING)) {
 			return false;
 		}
 		economy.createPlayerAccount(bankName + CUSTOM_BANK_STRING);
-		System.out.println(bankName + "_" + BankPlugin.getInstance());
+		Bukkit.getLogger().log(Level.INFO, "Created bank by name: " + bankName + CUSTOM_BANK_STRING);
 		return true;
 	}
 

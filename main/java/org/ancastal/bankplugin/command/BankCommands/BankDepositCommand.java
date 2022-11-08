@@ -9,7 +9,7 @@ import org.mineacademy.fo.command.SimpleSubCommand;
 import java.util.Collections;
 import java.util.List;
 
-public class BankDepositCommand extends SimpleSubCommand {
+public final class BankDepositCommand extends SimpleSubCommand {
 	public BankDepositCommand(SimpleCommandGroup parent) {
 		super(parent, "deposit");
 		setMinArguments(1);

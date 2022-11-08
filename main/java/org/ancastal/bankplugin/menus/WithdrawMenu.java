@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.annotation.Position;
@@ -28,20 +27,10 @@ public class WithdrawMenu extends Menu {
 
 	@Position(4)
 	private final Button confirmButton;
+	private int quantity = 0;
 
 
-	public static void setQuantity(int quantity) {
-
-		WithdrawMenu.quantity = quantity;
-
-	}
-
-
-	static int quantity = 0;
-
-
-	public WithdrawMenu(Player player) {
-
+	public WithdrawMenu(Player player, String bankName) {
 		setTitle("Set your deposit...");
 		setSize(Integer.valueOf(9));
 		//CompMetadata.setTempMetadata(player, "WithdrawMenu_" + BankPlugin.getInstance());
@@ -54,24 +43,23 @@ public class WithdrawMenu extends Menu {
 				WithdrawMenu.this.restartMenu();
 
 				ItemStack item = player.getItemInHand();
-				String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
-				BankCertificate.withdrawFromBank(bankName, player, Double.valueOf(WithdrawMenu.quantity));
+				BankCertificate.withdrawFromBank(bankName, player, Double.valueOf(quantity));
 				quantity = 0;
+				System.out.println("Confirm button bankName is: " + bankName);
 				player.closeInventory();
 			}
 
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(CompMaterial.PAPER, "&bDeposit: &7" + WithdrawMenu.quantity + " Krunas", "\nConfirm your deposit.").glow(true).make();
+				return ItemCreator.of(CompMaterial.PAPER, "&bWithdraw: &7" + quantity + " Krunas", "\nConfirm your deposit.").glow(true).make();
 			}
 		};
 
 		this.increaseButton = Button.makeSimple(ItemCreator.of(CompMaterial.PLAYER_HEAD, "&2Increase by 1.000 Krunas", "\nIncrease the amount you\nwould like to deposit").skullUrl("https://textures.minecraft.net/texture/b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f"), action -> {
 			Economy economy = BankPlugin.getEconomy();
 			ItemStack item = player.getItemInHand();
-			String bankName = Common.stripColors(item.getItemMeta().getDisplayName()) + BankCertificate.CUSTOM_BANK_STRING;
-			if (quantity >= economy.getBalance(bankName)) {
+			if (quantity >= economy.getBalance(BankCertificate.getBankString(bankName))) {
 				animateTitle("&4Not enough money in the bank");
 				return;
 			}

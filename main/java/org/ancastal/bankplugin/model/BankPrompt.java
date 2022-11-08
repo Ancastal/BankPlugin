@@ -1,5 +1,6 @@
 package org.ancastal.bankplugin.model;
 
+import org.ancastal.bankplugin.settings.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
@@ -20,8 +21,10 @@ public class BankPrompt extends NumericPrompt {
 	protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
 		Player player = (Player) context.getForWhom();
 		ItemStack item = player.getItemInHand();
-
-		String bankName = Common.stripColors(item.getItemMeta().getDisplayName()) + BankCertificate.CUSTOM_BANK_STRING;
+		String LAST_CUSTOM_BANK_STRING = Settings.CUSTOM_BANK_STRING.get(
+				Settings.CUSTOM_BANK_STRING.size() - 1
+		);
+		String bankName = Common.stripColors(item.getItemMeta().getDisplayName()) + LAST_CUSTOM_BANK_STRING;
 		BankCertificate.transferToPlayer(bankName, player, targetPlayerName, input.doubleValue());
 		return null;
 	}

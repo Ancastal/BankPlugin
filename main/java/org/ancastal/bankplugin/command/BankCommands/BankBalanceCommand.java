@@ -8,7 +8,7 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
-public class BankBalanceCommand extends SimpleSubCommand {
+public final class BankBalanceCommand extends SimpleSubCommand {
 
 	public BankBalanceCommand(SimpleCommandGroup parent) {
 		super(parent, "balance|bal");
@@ -22,7 +22,8 @@ public class BankBalanceCommand extends SimpleSubCommand {
 
 		ItemStack item = getPlayer().getItemInHand();
 
+		String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
 		if (!BankCertificate.checkCertificate(getPlayer(), item)) return;
-		tellInfo("Balance: &l" + economy.getBalance(Common.stripColors(item.getItemMeta().getDisplayName()) + BankCertificate.CUSTOM_BANK_STRING));
+		tellInfo("Balance: &l" + economy.getBalance(bankName + BankCertificate.getBankString(bankName)));
 	}
 }

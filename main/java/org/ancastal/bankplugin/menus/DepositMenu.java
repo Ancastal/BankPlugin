@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.annotation.Position;
@@ -24,18 +23,11 @@ public class DepositMenu extends Menu {
 	private final Button decreaseButton;
 	@Position(4)
 	private final Button confirmButton;
+	private int quantity = 0;
 
-
-	public static void setQuantity(int quantity) {
-		DepositMenu.quantity = quantity;
-	}
-
-
-	static int quantity = 0;
-
-	DepositMenu(Player player) {
+	DepositMenu(Player player, String bankName) {
 		setTitle("Set your deposit...");
-		setSize(Integer.valueOf(9));
+		setSize(9);
 		//CompMetadata.setTempMetadata(player, "DepositMenu_" + BankPlugin.getInstance());
 
 		this.confirmButton = new Button() {
@@ -44,17 +36,18 @@ public class DepositMenu extends Menu {
 				DepositMenu.this.restartMenu();
 
 				ItemStack item = player.getItemInHand();
-				String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
-				BankCertificate.depositToBank(bankName, player, Double.valueOf(DepositMenu.quantity));
+				System.out.println("DepositMenu bankName: " + bankName);
+				BankCertificate.depositToBank(bankName, player, Double.valueOf(quantity));
 				quantity = 0;
 				player.closeInventory();
+				
 
 			}
 
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(CompMaterial.PAPER, "&bDeposit: &7" + DepositMenu.quantity + " Krunas", "\nConfirm your deposit.").glow(true).make();
+				return ItemCreator.of(CompMaterial.PAPER, "&bDeposit: &7" + quantity + " Krunas", "\nConfirm your deposit.").glow(true).make();
 			}
 
 		};

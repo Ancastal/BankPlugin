@@ -3,7 +3,7 @@ package org.ancastal.bankplugin.model;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.ancastal.bankplugin.BankPlugin;
-import org.bukkit.Bukkit;
+import org.ancastal.bankplugin.settings.Settings;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -13,37 +13,36 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.CompMetadata;
 
-import java.util.logging.Level;
-
 @Getter
 public class BankCertificate {
 
-	public final static String CUSTOM_BANK_STRING = "_" + BankPlugin.getNamed();
+
 	protected final static String WARN_PREFIX = "&8&l[&4&l\u2715&8&l]&c ";
 	protected final static String SUCCESS_PREFIX = "&8&l[&2&l\u2714&8&l]&7 ";
 
-	@Getter
-	public static final String lore =
-			"\n"
-					+ "This is a certificate of"
-					+ "\nownership of a bank."
-					+ "\n"
-					+ "\n&f&lCERTIFICATE";
 
-
-	private boolean createBank(String bankName) {
+	public static boolean createBankAccount(String bankName) {
 		Economy economy = BankPlugin.getEconomy();
-		if (economy.hasAccount(bankName + CUSTOM_BANK_STRING)) {
-			return false;
+		String LAST_CUSTOM_BANK_STRING = Settings.CUSTOM_BANK_STRING.get(
+				Settings.CUSTOM_BANK_STRING.size() - 1
+		);
+		for (String s : Settings.CUSTOM_BANK_STRING) {
+			if (economy.hasAccount(bankName + s)) {
+				return false;
+			}
 		}
-		economy.createPlayerAccount(bankName + CUSTOM_BANK_STRING);
-		Bukkit.getLogger().log(Level.INFO, "Created bank by name: " + bankName + CUSTOM_BANK_STRING);
+
+		// Get last key from CustomBankString in the settings.yml
+
+		economy.createPlayerAccount(bankName + LAST_CUSTOM_BANK_STRING);
+
+		Common.log("Created bank by name: " + bankName + LAST_CUSTOM_BANK_STRING);
 		return true;
 	}
 
 
 	public ItemStack getItem(OfflinePlayer player, String bankName, Player sender) {
-		if (!createBank(bankName)) {
+		if (!createBankAccount(bankName)) {
 			Common.tellNoPrefix(sender, WARN_PREFIX + "This bank account already exists.");
 			return null;
 		}
@@ -51,7 +50,10 @@ public class BankCertificate {
 				ItemCreator.of(
 								CompMaterial.PAPER,
 								"&b" + bankName,
-								getLore()
+								"\nThis is a certificate of"
+										+ "\nownership of a bank."
+										+ "\n"
+										+ "\n&f&lCERTIFICATE"
 						).hideTags(true)
 						.glow(true)
 						.make()
@@ -77,22 +79,28 @@ public class BankCertificate {
 		return true;
 	}
 
-
-	private static String getLore() {
-		return lore;
-	}
-
 	public static void clearAccount(String bankName) {
+		String CUSTOM_BANK_STRING = getBankString(bankName);
 
 		Economy economy = BankPlugin.getEconomy();
-		Double bankBalance = economy.getBalance(bankName + CUSTOM_BANK_STRING);
-		economy.withdrawPlayer(bankName + CUSTOM_BANK_STRING, bankBalance);
+		Double bankBalance = economy.getBalance(CUSTOM_BANK_STRING);
+		economy.withdrawPlayer(CUSTOM_BANK_STRING, bankBalance);
 
+	}
+
+	public static String getBankString(String bankName) {
+		Economy economy = BankPlugin.getEconomy();
+		for (String s : Settings.CUSTOM_BANK_STRING) {
+			if (economy.hasAccount(bankName + s)) return bankName + s;
+		}
+		return null;
 	}
 
 	public static void withdrawFromBank(String bankName, Player receivingPlayer, Double amount) {
 		Economy economy = BankPlugin.getEconomy();
-		if (economy.getBalance(bankName + CUSTOM_BANK_STRING) < amount) {
+		String CUSTOM_BANK_STRING = getBankString(bankName);
+
+		if (economy.getBalance(CUSTOM_BANK_STRING) < amount) {
 			Common.tellNoPrefix(receivingPlayer, WARN_PREFIX + "The bank does not have enough money.");
 			return;
 		}
@@ -100,7 +108,7 @@ public class BankCertificate {
 			Common.tellNoPrefix(receivingPlayer, WARN_PREFIX + "You cannot withdraw 0.0 Krunas.");
 			return;
 		}
-		economy.withdrawPlayer(bankName + CUSTOM_BANK_STRING, amount);
+		economy.withdrawPlayer(getBankString(bankName), amount);
 		economy.depositPlayer(receivingPlayer, amount);
 
 		Common.tellNoPrefix(receivingPlayer, SUCCESS_PREFIX + "You have withdrawn &l" + amount + "kr &7from the bank!");
@@ -110,6 +118,8 @@ public class BankCertificate {
 
 	public static void depositToBank(String bankName, Player sendingPlayer, Double amount) {
 		Economy economy = BankPlugin.getEconomy();
+		String CUSTOM_BANK_STRING = getBankString(bankName);
+
 		if (economy.getBalance(sendingPlayer) <= amount) {
 			Common.tellNoPrefix(sendingPlayer, WARN_PREFIX + "You do not have enough money.");
 			return;
@@ -118,15 +128,21 @@ public class BankCertificate {
 			Common.tellNoPrefix(sendingPlayer, WARN_PREFIX + "You cannot deposit 0.0 Krunas.");
 			return;
 		}
+
+		System.out.println("DepositMenu Custom_Bank_String: " + CUSTOM_BANK_STRING);
+
 		economy.withdrawPlayer(sendingPlayer, amount);
-		economy.depositPlayer(bankName + CUSTOM_BANK_STRING, amount);
+		economy.depositPlayer(CUSTOM_BANK_STRING, amount);
 
 		Common.tellNoPrefix(sendingPlayer, SUCCESS_PREFIX + "You have deposited &l" + amount + "kr &7into the bank!");
 	}
 
 	public static void transferToPlayer(String bankName, Player sendingPlayer, Player receivingPlayer, Double amount) {
 		Economy economy = BankPlugin.getEconomy();
-		if (economy.getBalance(bankName + CUSTOM_BANK_STRING) < amount) {
+
+		String CUSTOM_BANK_STRING = getBankString(bankName);
+
+		if (economy.getBalance(CUSTOM_BANK_STRING) < amount) {
 			Common.tellNoPrefix(receivingPlayer, WARN_PREFIX + "The bank does not have enough money.");
 			return;
 		}
@@ -134,8 +150,9 @@ public class BankCertificate {
 			Common.tellNoPrefix(sendingPlayer, WARN_PREFIX + "You cannot transfer 0.0 Krunas.");
 			return;
 		}
-		economy.withdrawPlayer(bankName + CUSTOM_BANK_STRING, amount);
+		economy.withdrawPlayer(CUSTOM_BANK_STRING, amount);
 		economy.depositPlayer(receivingPlayer, amount);
 		Common.tellNoPrefix(sendingPlayer, SUCCESS_PREFIX + "You have sent &l" + amount + "kr &7to " + receivingPlayer);
 	}
+
 }

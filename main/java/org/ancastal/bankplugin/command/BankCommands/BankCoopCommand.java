@@ -8,7 +8,7 @@ import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMetadata;
 
-public class BankCoopCommand extends SimpleSubCommand {
+public final class BankCoopCommand extends SimpleSubCommand {
 	public BankCoopCommand(BankCommandGroup parent) {
 		super(parent, "coop");
 		setUsage("<player>");

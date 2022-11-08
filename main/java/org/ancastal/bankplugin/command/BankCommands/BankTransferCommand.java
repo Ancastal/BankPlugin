@@ -8,7 +8,7 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
-public class BankTransferCommand extends SimpleSubCommand {
+public final class BankTransferCommand extends SimpleSubCommand {
 	public BankTransferCommand(SimpleCommandGroup parent) {
 		super(parent, "transfer");
 		setMinArguments(2);
@@ -28,6 +28,6 @@ public class BankTransferCommand extends SimpleSubCommand {
 		String bankName = Common.stripColors(item.getItemMeta().getDisplayName());
 		BankCertificate.transferToPlayer(bankName, getPlayer(), receivingPlayer, Double.parseDouble(args[1]));
 	}
-	
+
 
 }

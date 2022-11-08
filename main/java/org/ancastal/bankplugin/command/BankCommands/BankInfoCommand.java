@@ -2,7 +2,7 @@ package org.ancastal.bankplugin.command.BankCommands;
 
 import net.milkbowl.vault.economy.Economy;
 import org.ancastal.bankplugin.BankPlugin;
-import org.ancastal.bankplugin.model.BankCertificate;
+import org.ancastal.bankplugin.settings.Settings;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
@@ -31,11 +31,13 @@ public final class BankInfoCommand extends SimpleSubCommand {
 		if (CompMetadata.getMetadata(item, "playerName") == null) {
 			tellError("This Bank Certificate is not valid.");
 		}
-
+		String LAST_CUSTOM_BANK_STRING = Settings.CUSTOM_BANK_STRING.get(
+				Settings.CUSTOM_BANK_STRING.size() - 1
+		);
 		tellSuccess("This is a valid Bank Certificate.");
 		tellInfo("Owner: &l" + CompMetadata.getMetadata(item, "playerName"));
-		tellInfo("Balance: &l" + economy.getBalance(Common.stripColors(item.getItemMeta().getDisplayName()) + BankCertificate.CUSTOM_BANK_STRING));
-		tellInfo("Bank Name: &l" + Common.stripColors(item.getItemMeta().getDisplayName()) + BankCertificate.CUSTOM_BANK_STRING);
+		tellInfo("Balance: &l" + economy.getBalance(Common.stripColors(item.getItemMeta().getDisplayName()) + LAST_CUSTOM_BANK_STRING));
+		tellInfo("Bank Name: &l" + Common.stripColors(item.getItemMeta().getDisplayName()) + LAST_CUSTOM_BANK_STRING);
 
 	}
 }

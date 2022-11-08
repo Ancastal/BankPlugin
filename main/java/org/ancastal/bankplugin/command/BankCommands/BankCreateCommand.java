@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import net.milkbowl.vault.economy.Economy;
 import org.ancastal.bankplugin.BankPlugin;
 import org.ancastal.bankplugin.model.BankCertificate;
+import org.ancastal.bankplugin.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +53,10 @@ public final class BankCreateCommand extends SimpleSubCommand {
 			return;
 		}
 
-		certificate = CompMetadata.setMetadata(CompMetadata.setMetadata(certificate, "playerName", playerName), "bankName", bankName + BankCertificate.CUSTOM_BANK_STRING);
+		certificate = CompMetadata.setMetadata(CompMetadata.setMetadata(certificate, "playerName", playerName), "bankName", bankName + Settings.CUSTOM_BANK_STRING.get(
+						Settings.CUSTOM_BANK_STRING.size() - 1
+				)
+		);
 
 
 		if (Bukkit.getPlayer(playerName) != null) {

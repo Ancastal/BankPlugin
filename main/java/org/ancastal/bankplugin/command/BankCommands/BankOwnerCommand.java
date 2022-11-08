@@ -11,7 +11,7 @@ import org.mineacademy.fo.remain.CompMetadata;
 import java.util.Collections;
 import java.util.List;
 
-public class BankOwnerCommand extends SimpleSubCommand {
+public final class BankOwnerCommand extends SimpleSubCommand {
 	public BankOwnerCommand(SimpleCommandGroup parent) {
 		super(parent, "owner");
 		setMinArguments(1);

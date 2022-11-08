@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonMenu;
@@ -17,7 +16,8 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 
 
-public class BankMenu extends Menu {
+public class SingleBankMenu extends Menu {
+
 
 	@Position(10)
 	private final Button depositButton;
@@ -34,23 +34,26 @@ public class BankMenu extends Menu {
 	@Position(16)
 	private final Button transferButton;
 
+	@Position(15)
+	private Button accountsButton = Button.DummyButton.makeEmpty();
+
 	private final Economy economy = BankPlugin.getEconomy();
 
 
-	public BankMenu(Player player) {
+	public SingleBankMenu(Player player, final String bankName) {
 
 		setTitle("Bank Administration");
 		setSize(27);
 		setViewer(player);
 
-		this.depositButton = new ButtonMenu(new DepositMenu(player),
-				ItemCreator.of(CompMaterial.PLAYER_HEAD, "&bDeposit 1.000 Krunas", "\nDeposit money into \nyour Bank Account\n")
+		this.depositButton = new ButtonMenu(new DepositMenu(player, bankName),
+				ItemCreator.of(CompMaterial.PLAYER_HEAD, "&bDeposit Money", "\nDeposit money into \nyour Bank Account\n")
 						.skullUrl("https://textures.minecraft.net/texture/b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f")
 						.make()
 		);
 
-		this.withdrawButton = new ButtonMenu(new WithdrawMenu(player),
-				ItemCreator.of(CompMaterial.PLAYER_HEAD, "&bWithdraw 1.000 Krunas", "\nWithdraw money into \nyour Bank Account\n")
+		this.withdrawButton = new ButtonMenu(new WithdrawMenu(player, bankName),
+				ItemCreator.of(CompMaterial.PLAYER_HEAD, "&bWithdraw Money", "\nWithdraw money into \nyour Bank Account\n")
 						.skullUrl("https://textures.minecraft.net/texture/4e4b8b8d2362c864e062301487d94d3272a6b570afbf80c2c5b148c954579d46")
 						.make()
 		);
@@ -61,9 +64,7 @@ public class BankMenu extends Menu {
 				action -> {
 
 					ItemStack item = player.getItemInHand();
-
-					String bankName = Common.stripColors(item.getItemMeta().getDisplayName()) + BankCertificate.CUSTOM_BANK_STRING;
-					tellInfo("Balance: " + this.economy.getBalance(bankName) + "kr");
+					tellInfo("Balance: " + economy.getBalance(BankCertificate.getBankString(bankName)) + "kr");
 
 				});
 
@@ -78,8 +79,19 @@ public class BankMenu extends Menu {
 			}
 
 		});
+		ItemStack item = player.getItemInHand();
+		if (item != null && item.getItemMeta().getDisplayName() != bankName) return;
+		this.accountsButton = new ButtonMenu(
+				new AccountsMenu(
+						player
+				), ItemCreator.of(
+						CompMaterial.PLAYER_HEAD, "&bBank Accounts", "\nManage bank accounts")
+				.skullUrl("https://textures.minecraft.net/texture/d1f222b98538d4ea5dc48891a98138dc191b807ef281da749b781039f1209ca4")
+				.make()
 
+		);
 	}
+
 
 	@Override
 	public ItemStack getItemAt(int slot) {

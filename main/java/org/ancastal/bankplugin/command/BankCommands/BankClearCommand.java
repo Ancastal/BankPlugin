@@ -1,7 +1,5 @@
 package org.ancastal.bankplugin.command.BankCommands;
 
-import net.milkbowl.vault.economy.Economy;
-import org.ancastal.bankplugin.BankPlugin;
 import org.ancastal.bankplugin.model.BankCertificate;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.command.SimpleSubCommand;
@@ -9,7 +7,7 @@ import org.mineacademy.fo.command.SimpleSubCommand;
 import java.util.Collections;
 import java.util.List;
 
-public class BankClearCommand extends SimpleSubCommand {
+public final class BankClearCommand extends SimpleSubCommand {
 
 	public BankClearCommand(SimpleCommandGroup parent) {
 		super(parent, "clear");
@@ -22,8 +20,6 @@ public class BankClearCommand extends SimpleSubCommand {
 		String bankName = args[0];
 
 		BankCertificate.clearAccount(bankName);
-		Economy economy = BankPlugin.getEconomy();
-
 	}
 
 	@Override

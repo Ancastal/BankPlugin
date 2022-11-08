@@ -39,9 +39,7 @@ public final class BankListener implements Listener {
 
 			Conversation conversation = new Conversation(BankPlugin.getInstance(), player, new BankPrompt(targetPlayerName));
 			player.beginConversation(conversation);
-
 		}
-
 	}
 
 

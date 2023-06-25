@@ -46,11 +46,14 @@ the specified bank.
 The `ATM_Listener.java` class handles events related to ATMs. It includes
 methods to check if a block is an ATM, if a player owns an ATM, and to
 find the closest hologram (likely used for displaying information at the
-ATM). It also handles events for breaking blocks, clicking blocks, and
-changing signs, which are likely used for interacting with the ATM.
+ATM).
 
-Players can interact with ATMs by clicking on them,
-in order to interact with their bank account.
+Players can interact with ATMs by clicking on them. This will open
+an interface to manage their personal bank accounts.
+
+ATMs can only be destroyed and replace by the bank's owner.
+There is a fixed limit to ATM placement, that can be increased by
+purchasing additional slots, in the relevant menu.
 
 ## Installation
 

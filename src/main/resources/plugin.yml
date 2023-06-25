@@ -1,0 +1,33 @@
+name: ${project.name}
+version: ${project.version}
+main: ${main.class}
+description: A plugin to add player banks to your server.
+author: ${author}
+
+api-version: 1.13
+
+libraries:
+  - org.openjdk.nashorn:nashorn-core:15.4
+
+depend: [ Vault ]
+softdepend: [ HolographicDisplays, EssentialsX, ProtocolLib, Citizens ]
+
+commands:
+  bank:
+    description: Bank command
+    usage: /bank <create|balance|withdraw|deposit|menu|account|interest>
+  account:
+    description: Account command
+    usage: /account <accept|deny|withdraw|deposit|menu>
+
+permissions:
+  privatebanks.command.use:
+    description: Allows access to using bank commands.
+    default: op
+  privatebanks.command.create:
+    description: Allows access to the /bank create command.
+    default: op
+  privatebanks.command.clear:
+    description: Allows access to the /bank clear command.
+    default: op
+

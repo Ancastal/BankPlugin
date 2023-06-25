@@ -1,0 +1,13 @@
+connection-details:
+  address: 127.0.0.1
+  database: 'economy'
+  username: 'root'
+  password: 'adminpassword'
+currency: KR
+interests: true
+ATMs: true
+
+# Plugin Prefix
+Prefix: "&8[&cBankNative&8]&7 "
+
+Version: 1

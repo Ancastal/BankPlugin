@@ -1,6 +1,3 @@
-Apologies for the oversight. Here's the revised version of the README.md, including the menu commands and admin
-commands:
-
 # BankPlugin for Minecraft
 
 BankPlugin is a Minecraft plugin that allows players to create and manage virtual banks and accounts within the game. It

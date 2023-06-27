@@ -11,6 +11,7 @@ import org.ancastal.banknative.models.Bank;
 import org.ancastal.banknative.settings.Settings;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.RandomUtil;
@@ -78,12 +81,22 @@ public class ATM_Listener implements Listener {
 			return;
 		}
 
+
 		block.setType(Material.PLAYER_WALL_HEAD);
-		Skull skull = (Skull) block.getState();
-		skull.setOwningPlayer(Bukkit.getOfflinePlayer("zasf"));
-		skull.setRotation(e.getPlayer().getFacing().getOppositeFace());
-		skull.update();
-		CompMetadata.setMetadata(skull, "ATM", String.valueOf(player.getUniqueId()));
+		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
+		meta.setOwningPlayer(Bukkit.getOfflinePlayer("Laserpanda"));
+		meta.setDisplayName(ChatColor.BLUE + "Custom Skull");
+		item.setItemMeta(meta);
+		BlockState state = block.getState();
+		if (state instanceof Skull) {
+			Skull skull = (Skull) state;
+			skull.setOwningPlayer(Bukkit.getOfflinePlayer("Laserpanda"));
+			skull.setRotation(e.getPlayer().getFacing().getOppositeFace());
+			skull.update();
+			block.getWorld().dropItemNaturally(block.getLocation(), item);
+			CompMetadata.setMetadata(skull, "ATM", String.valueOf(player.getUniqueId()));
+		}
 		database.increaseActiveATMs(bank);
 
 		Location location = block.getLocation().add(0.5, 2, 0.5);
@@ -230,5 +243,3 @@ public class ATM_Listener implements Listener {
 
 	// show menu to sender
 }
-
-

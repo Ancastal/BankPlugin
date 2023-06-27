@@ -38,13 +38,12 @@ public class BankMenu extends Menu {
 	//@Position(9)
 	//private Button BackButton = Button.DummyButton.makeEmpty();
 
-	private Double balance = 0D;
+	private final double balance;
 
 
 	/**
-	 * @param player      Player to whom the GUI is displayed.
-	 * @param bankName    Name of the bank owned by the player.
-	 * @param accountMenu Checks if you are managing a deposit account or the main bank.
+	 * @param player   Player to whom the GUI is displayed.
+	 * @param bankName Name of the bank owned by the player.
 	 */
 	public BankMenu(Player player, final String bankName, Database database) throws SQLException {
 		if (bankName == null || bankName.equals("")) player.closeInventory();
@@ -59,13 +58,14 @@ public class BankMenu extends Menu {
 		setSize(27);
 		setViewer(player);
 
-		this.depositButton = new ButtonMenu(new DepositMenu(player, bankName, database),
+		final Double finalBalance = database.getBankByName(bankName).getBalance();
+		this.depositButton = new ButtonMenu(new DepositMenu(player, bankName, database, finalBalance),
 				ItemCreator.of(CompMaterial.PLAYER_HEAD, "&bDeposit Money", "\nDeposit money into \nyour bank account\n")
 						.skullUrl("https://textures.minecraft.net/texture/b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f")
 						.make()
 		);
 
-		this.withdrawButton = new ButtonMenu(new WithdrawMenu(player, bankName, database),
+		this.withdrawButton = new ButtonMenu(new WithdrawMenu(player, bankName, database, finalBalance),
 				ItemCreator.of(CompMaterial.PLAYER_HEAD, "&bWithdraw Money", "\nWithdraw money from \nyour bank account\n")
 						.skullUrl("https://textures.minecraft.net/texture/4e4b8b8d2362c864e062301487d94d3272a6b570afbf80c2c5b148c954579d46")
 						.make()
@@ -74,11 +74,6 @@ public class BankMenu extends Menu {
 		this.balanceButton = new Button() {
 			@Override
 			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-				try {
-					balance = database.getBankByName(bankName).getBalance();
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
 				tellInfo(String.format("Balance: %,.2f %s", balance, Settings.getCurrency()));
 				restartMenu();
 
@@ -125,7 +120,6 @@ public class BankMenu extends Menu {
 		);
 
 	}
-
 
 
 	@Override

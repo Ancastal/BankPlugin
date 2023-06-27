@@ -53,9 +53,15 @@ public class DepositMenu extends Menu {
 	private final Button confirmButton;
 	private int quantity = 0;
 	private final Database database;
+	private final String bankName;
+	private double balance;
+	
 
-	public DepositMenu(Player owner, String bankName, Database database) {
+	public DepositMenu(Player owner, String bankName, Database database, double balance) throws SQLException {
 		this.database = database;
+		this.bankName = bankName;
+		this.balance = balance;
+		this.quantity = 0;
 		setTitle("Set your deposit...");
 		setSize(9);
 		String currency = Settings.getCurrency();
@@ -74,7 +80,8 @@ public class DepositMenu extends Menu {
 					Bank bank = database.getBankByOwner(owner.getUniqueId().toString());
 					economy.withdrawPlayer(owner, quantity + 0.0);
 					database.give(bank, quantity + 0.0);
-					tellSuccess("You have deposited " + quantity + " KR.");
+					bank.setBalance(bank.getBalance() + quantity);
+					tellSuccess("You have deposited " + quantity + " " + currency + ".");
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}

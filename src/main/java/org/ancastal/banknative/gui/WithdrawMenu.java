@@ -1,6 +1,5 @@
 package org.ancastal.banknative.gui;
 
-
 import net.milkbowl.vault.economy.Economy;
 import org.ancastal.banknative.BankNative;
 import org.ancastal.banknative.db.Database;
@@ -18,7 +17,6 @@ import org.mineacademy.fo.remain.CompMaterial;
 
 import java.sql.SQLException;
 import java.util.Locale;
-
 
 public class WithdrawMenu extends Menu {
 
@@ -41,49 +39,61 @@ public class WithdrawMenu extends Menu {
 	@Position(8)
 	private final Button decrease10Button;
 
-	private int quantity = 0;
 	private final Database database;
-	private Double balance;
+	private final String bankName;
+
+	private double quantity;
+	private double balance;
 
 	public static String formattedDouble(double value) {
 		return String.format(Locale.US, "%,.2f", value);
 	}
 
-	public WithdrawMenu(Player player, String bankName, Database database) {
-		Economy economy = BankNative.getEconomy();
+	public WithdrawMenu(Player player, String bankName, Database database, double balance) throws SQLException {
 		setTitle("Set your withdraw...");
 		setSize(9);
-		String currency = Settings.getCurrency();
-		this.database = database;
-		this.confirmButton = new Button() {
+		setViewer(player);
 
+		this.bankName = bankName;
+		this.database = database;
+		this.balance = balance;
+		this.quantity = 0;
+
+		Economy economy = BankNative.getEconomy();
+		String currency = Settings.getCurrency();
+
+		this.confirmButton = new Button() {
 			@Override
 			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-				WithdrawMenu.this.restartMenu();
 				try {
 					Bank bank = database.getBankByName(bankName);
-					balance = bank.getBalance();
-					if (quantity > balance) {
-						tellError("The bank does not have enough money.");
+					if (quantity > bank.getBalance()) {
+						tellError("You cannot withdraw more than your balance.");
 						return;
 					}
-					database.take(bank, quantity + 0.0);
-					economy.depositPlayer(player, quantity + 0.0);
+					if (quantity <= 0) {
+						tellError("You must withdraw a positive amount.");
+						return;
+					}
+					database.take(bank, quantity);
+					economy.depositPlayer(player, quantity);
+					tellSuccess(String.format("You have withdrawn %,.2f %s from your account.", quantity, Settings.getCurrency()));
+					restartMenu();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
-				quantity = 0;
-				player.closeInventory();
 			}
-
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(CompMaterial.PAPER, "&bWithdraw: &7" + formattedDouble(quantity) + " " + currency, "\nConfirm your deposit.").glow(true).make();
+				return ItemCreator.of(CompMaterial.GREEN_DYE, "&aConfirm Withdrawal",
+								String.format("&eWithdraw %,.2f %s from your account.", quantity, Settings.getCurrency()))
+						.build().make();
 			}
 		};
 
 		this.increase1kButton = Button.makeSimple(ItemCreator.of(CompMaterial.PLAYER_HEAD, "&2Increase by 1,000 " + currency, "\nIncrease the amount you\nwould like to deposit").skullUrl("https://textures.minecraft.net/texture/b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f"), action -> {
+
 			if (quantity >= balance) {
 				animateTitle("&4Not enough money in the bank");
 				return;
@@ -170,7 +180,4 @@ public class WithdrawMenu extends Menu {
 		getPreviousMenu(player).displayTo(player);
 	}
 
-
 }
-
-

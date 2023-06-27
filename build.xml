@@ -20,7 +20,7 @@
          to compile your plugin to multiple servers. -->
 
     <target name="Build">
-        <jar jarfile="/Users/antoniocastaldo/Desktop/MinecraftServers/1.18.2/plugins/${ant.project.name}.jar"
+        <jar jarfile="/Users/antoniocastaldo/Desktop/Minecraft Servers/1.19.3/plugins/${ant.project.name}.jar"
              basedir="./target/classes/" includes="**/*">
 
             <!-- IF you have Foundation on your disk, remove the <zipgroupfileset> line and uncomment the <fileset> one. Repeat for the other <jar> goal below.

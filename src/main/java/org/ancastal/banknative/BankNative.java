@@ -57,6 +57,7 @@ public final class BankNative extends SimplePlugin {
 		return permission != null;
 	}
 
+
 	@Override
 	protected void onPluginStart() {
 		if (!setupEconomy() || !setupPermission()) {
@@ -72,6 +73,7 @@ public final class BankNative extends SimplePlugin {
 			e.printStackTrace();
 			System.out.println("Could not initialize database.");
 		}
+
 		this.getCommand("bank").setExecutor(new BankCommands(this, database));
 		this.getCommand("account").setExecutor(new AccountCommands(this, database));
 		registerEvents(new ATM_Listener(database, this));

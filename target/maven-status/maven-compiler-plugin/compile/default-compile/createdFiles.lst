@@ -14,6 +14,7 @@ org/ancastal/banknative/db/Database$BankType.class
 org/ancastal/banknative/models/Account.class
 org/ancastal/banknative/listeners/InterestListener.class
 org/ancastal/banknative/gui/AccountWithdrawMenu$1.class
+org/ancastal/banknative/commands/AdminCommands.class
 org/ancastal/banknative/commands/AccountCommands.class
 org/ancastal/banknative/db/Database.class
 org/ancastal/banknative/gui/AccountDepositMenu$1.class

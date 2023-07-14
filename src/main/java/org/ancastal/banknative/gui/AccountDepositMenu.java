@@ -6,6 +6,7 @@ import org.ancastal.banknative.BankNative;
 import org.ancastal.banknative.db.Database;
 import org.ancastal.banknative.models.Account;
 import org.ancastal.banknative.settings.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -75,6 +76,7 @@ public class AccountDepositMenu extends Menu {
 					economy.withdrawPlayer(viewer, quantity + 0.0);
 					database.giveAccount(account, quantity + 0.0);
 					viewer.sendMessage(ChatColor.GREEN + "You have deposited " + quantity + " KR.");
+					Bukkit.getLogger().info("Player " + viewer.getName() + " deposited " + quantity + " KR to " + account.getAccountHolder() + " in " + bankName + " bank.");
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}

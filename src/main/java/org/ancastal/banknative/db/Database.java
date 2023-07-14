@@ -17,6 +17,7 @@ public class Database {
 
 	private Connection connection;
 
+
 	public enum BankType {
 		BANK,
 		ACCOUNT
@@ -44,6 +45,29 @@ public class Database {
 			statement.execute(sql);
 			sql = "CREATE TABLE IF NOT EXISTS bank_accounts (uuid varchar(36) primary key, accountHolder varchar(36), bankName varchar(36), balance double)";
 			statement.execute(sql);
+		}
+	}
+
+	public void createLoan(String playerId, double amount, double interestRate, int duration) throws SQLException {
+		try (PreparedStatement statement = getConnection()
+				.prepareStatement("INSERT INTO loans(playerId, amount, interestRate, duration, status) VALUES (?, ?, ?, ?, ?)")
+		) {
+			statement.setString(1, playerId);
+			statement.setDouble(2, amount);
+			statement.setDouble(3, interestRate);
+			statement.setInt(4, duration);
+			statement.setString(5, "active");
+			statement.executeUpdate();
+		}
+	}
+
+	public void updateLoanStatus(int loanId, String status) throws SQLException {
+		try (PreparedStatement statement = getConnection()
+				.prepareStatement("UPDATE loans SET status = ? WHERE loanId = ?")
+		) {
+			statement.setString(1, status);
+			statement.setInt(2, loanId);
+			statement.executeUpdate();
 		}
 	}
 
@@ -131,6 +155,26 @@ public class Database {
 			statement.setInt(5, bank.getAtms());
 			statement.setString(6, bank.getInterest());
 			statement.setInt(7, bank.getActiveATMs());
+			statement.executeUpdate();
+		}
+	}
+
+	public void changeBankOwner(String uuid, String newOwner) throws SQLException {
+		try (PreparedStatement statement = getConnection()
+				.prepareStatement("UPDATE banks SET bankOwner = ? WHERE uuid = ?")
+		) {
+			statement.setString(1, newOwner);
+			statement.setString(2, uuid);
+			statement.executeUpdate();
+		}
+	}
+
+	public void changeBankUUID(String oldUUID, String newUUID) throws SQLException {
+		try (PreparedStatement statement = getConnection()
+				.prepareStatement("UPDATE banks SET uuid = ? WHERE uuid = ?")
+		) {
+			statement.setString(1, newUUID);
+			statement.setString(2, oldUUID);
 			statement.executeUpdate();
 		}
 	}

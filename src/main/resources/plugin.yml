@@ -19,6 +19,9 @@ commands:
   account:
     description: Account command
     usage: /account <accept|deny|withdraw|deposit|menu>
+  bankadmin:
+    description: Bank admin command
+    usage: /bankadmin <deletebank|setbalance|setinterest|deleteaccount|setowner>
 
 permissions:
   privatebanks.command.use:
@@ -30,4 +33,6 @@ permissions:
   privatebanks.command.clear:
     description: Allows access to the /bank clear command.
     default: op
-
+  privatebanks.admin:
+    description: Allows access to the /bankadmin command.
+    default: op

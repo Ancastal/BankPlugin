@@ -6,6 +6,7 @@ import org.ancastal.banknative.BankNative;
 import org.ancastal.banknative.db.Database;
 import org.ancastal.banknative.models.Account;
 import org.ancastal.banknative.settings.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -63,7 +64,7 @@ public class AccountWithdrawMenu extends Menu {
 				try {
 					database.takeAccount(account, quantity + 0.0);
 					economy.depositPlayer(viewer, quantity + 0.0);
-
+					Bukkit.getLogger().info("Player " + player.getName() + " withdrew " + quantity + " from " + bankName);
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}

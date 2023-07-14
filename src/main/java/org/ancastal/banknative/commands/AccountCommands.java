@@ -6,6 +6,7 @@ import org.ancastal.banknative.db.Database;
 import org.ancastal.banknative.gui.AccountMenu;
 import org.ancastal.banknative.models.Account;
 import org.ancastal.banknative.models.Bank;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -170,7 +171,7 @@ public class AccountCommands implements CommandExecutor, TabCompleter {
 
 		Account account = new Account(receiver.getUniqueId().toString(), receiver.getName(), bank.getBankName(), 0.0);
 		database.createAccount(account);
-		BankNative.getPermission().playerAdd(receiver, "privatebanks.account.use");
+		BankNative.getPermission().playerAdd(null, Bukkit.getOfflinePlayer(receiver.getUniqueId()), "privatebanks.account.use");
 		receiver.sendMessage(ChatColor.GREEN + "You have created a deposit account in " + bank.getBankName());
 
 

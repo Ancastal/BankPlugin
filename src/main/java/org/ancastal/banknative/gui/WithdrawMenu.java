@@ -5,6 +5,7 @@ import org.ancastal.banknative.BankNative;
 import org.ancastal.banknative.db.Database;
 import org.ancastal.banknative.models.Bank;
 import org.ancastal.banknative.settings.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -78,6 +79,7 @@ public class WithdrawMenu extends Menu {
 					database.take(bank, quantity);
 					economy.depositPlayer(player, quantity);
 					tellSuccess(String.format("You have withdrawn %,.2f %s from your account.", quantity, Settings.getCurrency()));
+					Bukkit.getLogger().info(String.format("%s has withdrawn %,.2f %s from %s", player.getName(), quantity, Settings.getCurrency(), bankName));
 					restartMenu();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);

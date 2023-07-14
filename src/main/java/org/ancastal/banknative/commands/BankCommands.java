@@ -148,6 +148,7 @@ public class BankCommands implements CommandExecutor, TabCompleter {
 		return true;
 	}
 
+
 	private void deleteBank(Bank bank, Player player) throws SQLException {
 		if (bank == null) {
 			player.sendMessage(ChatColor.RED + "You do not own any bank.");
@@ -263,6 +264,7 @@ public class BankCommands implements CommandExecutor, TabCompleter {
 		database.take(bank, amount);
 		economy.depositPlayer(executor, amount);
 		executor.sendMessage(ChatColor.GREEN + "You have withdrawn " + args[1] + " KR.");
+		Bukkit.getLogger().info(executor.getName() + " has withdrawn " + args[1] + " KR " + "from " + bank.getBankName());
 	}
 
 	private void deposit(Player executor, String[] args) throws SQLException {
@@ -281,7 +283,7 @@ public class BankCommands implements CommandExecutor, TabCompleter {
 		database.give(bank, amount);
 		economy.withdrawPlayer(executor, amount);
 		executor.sendMessage(ChatColor.GREEN + "You have deposited " + args[1] + " KR.");
-
+		Bukkit.getLogger().info(executor.getName() + " has deposited " + args[1] + " KR to " + bank.getBankName());
 	}
 
 	@Override

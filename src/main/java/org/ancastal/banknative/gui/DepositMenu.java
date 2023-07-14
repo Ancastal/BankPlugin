@@ -6,6 +6,7 @@ import org.ancastal.banknative.BankNative;
 import org.ancastal.banknative.db.Database;
 import org.ancastal.banknative.models.Bank;
 import org.ancastal.banknative.settings.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -55,7 +56,7 @@ public class DepositMenu extends Menu {
 	private final Database database;
 	private final String bankName;
 	private double balance;
-	
+
 
 	public DepositMenu(Player owner, String bankName, Database database, double balance) throws SQLException {
 		this.database = database;
@@ -82,6 +83,7 @@ public class DepositMenu extends Menu {
 					database.give(bank, quantity + 0.0);
 					bank.setBalance(bank.getBalance() + quantity);
 					tellSuccess("You have deposited " + quantity + " " + currency + ".");
+					Bukkit.getLogger().info(owner.getName() + " deposited " + quantity + " " + currency + " into " + bankName);
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
